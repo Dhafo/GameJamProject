@@ -10,12 +10,23 @@ public class Player : MonoBehaviour
 
     public float speed;
 
+    public Animator anim;
+
     // Update is called once per frame
     void Update()
     {
         if(rb.velocity.y < 0f)
         {
             rb.velocity += Vector2.up   * -speed;
+        }
+        
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground")
+        {
+            anim.SetBool("isFalling", false);
         }
     }
 }

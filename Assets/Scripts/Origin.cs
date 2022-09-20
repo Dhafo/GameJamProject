@@ -12,6 +12,11 @@ public class Origin : MonoBehaviour
         {
             shoot.inWall = true;
         }
+
+        if(other.tag == "WinArea")
+        {
+            shoot.inWin = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -20,6 +25,10 @@ public class Origin : MonoBehaviour
         if (other.tag == "WallBounce")
         {
             shoot.inWall = false;
+        }
+        if (other.tag == "WinArea") 
+        {
+            shoot.inWin = false;
         }
     }
 }

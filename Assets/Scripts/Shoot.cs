@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Shoot : MonoBehaviour
 {
@@ -17,9 +18,14 @@ public class Shoot : MonoBehaviour
     [SerializeField]
     private Transform origin;
 
+    public Player player;
+
+    public Animator frog;
+
 
     public float rateOfFire;
     public bool inWall;
+    public bool inWin = false;
     private bool canShoot = true;
 
 
@@ -36,7 +42,11 @@ public class Shoot : MonoBehaviour
             transform.eulerAngles = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
         }
 
-        if (Input.GetMouseButtonDown(0) && inWall && canShoot)
+        if (Input.GetMouseButtonDown(0) && inWin && canShoot)
+        {
+           WinGame();
+        }
+        else if (Input.GetMouseButtonDown(0) && inWall && canShoot)
         {
             StartCoroutine(WallFire(wallForce));
         }
@@ -50,12 +60,23 @@ public class Shoot : MonoBehaviour
 
     IEnumerator WallFire(float forceAmount)
     {
+        player.anim.SetBool("isFalling", true);
+        player.anim.SetBool("shoot", true);
+        frog.SetBool("shoot", true);
         canShoot = false;
+        yield return new WaitForSeconds(.2f);
         GameObject explosion = Instantiate(bullet, origin.transform.position, origin.transform.rotation);
         rb.AddForce((Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized * -forceAmount, ForceMode2D.Impulse);
         Destroy(explosion, .5f);
         yield return new WaitForSeconds(rateOfFire);
         canShoot = true;
+        frog.SetBool("shoot", false);
+        player.anim.SetBool("shoot", false);
+    }
+
+    private void WinGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }
