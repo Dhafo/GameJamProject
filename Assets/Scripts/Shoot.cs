@@ -28,6 +28,8 @@ public class Shoot : MonoBehaviour
     public bool inWin = false;
     private bool canShoot = true;
 
+    public AudioSource source;
+
 
     // Update is called once per frame
     void Update()
@@ -60,6 +62,7 @@ public class Shoot : MonoBehaviour
 
     IEnumerator WallFire(float forceAmount)
     {
+        source.Play();
         player.anim.SetBool("isFalling", true);
         player.anim.SetBool("shoot", true);
         frog.SetBool("shoot", true);
