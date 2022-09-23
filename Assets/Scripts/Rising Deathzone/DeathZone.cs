@@ -8,6 +8,7 @@ public class DeathZone : MonoBehaviour
     
     public Transform pos1, pos2;
     public float platSpeed;
+    public GameManager manager;
    
 
 
@@ -16,8 +17,11 @@ public class DeathZone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        transform.position = Vector3.MoveTowards(transform.position, pos2.position, platSpeed * Time.deltaTime);
+        if (manager.hasStarted) 
+        {
+            transform.position = Vector3.MoveTowards(transform.position, pos2.position, platSpeed * Time.deltaTime);
+        }
+        
 
         
     }

@@ -12,32 +12,33 @@ public class Imp : MonoBehaviour
 
     public SpriteRenderer sprite;
 
+    public GameManager manager;
+
     // Update is called once per frame
     void Update()
     {
-        
-        if (dir)
+        if (manager.hasStarted) 
         {
-            transform.position = Vector3.MoveTowards(transform.position, pos2.position, platSpeed * Time.deltaTime);
-            if (transform.position == pos2.position) 
+            if (dir)
             {
-                dir = false;
-                sprite.flipX = true;
+                transform.position = Vector3.MoveTowards(transform.position, pos2.position, platSpeed * Time.deltaTime);
+                if (transform.position == pos2.position)
+                {
+                    dir = false;
+                    sprite.flipX = true;
+                }
             }
-        }
-        else 
-        {
-            transform.position = Vector3.MoveTowards(transform.position, pos1.position, platSpeed * Time.deltaTime);
-            if (transform.position == pos1.position) 
+            else
             {
-                dir = true;
-                sprite.flipX = false;
+                transform.position = Vector3.MoveTowards(transform.position, pos1.position, platSpeed * Time.deltaTime);
+                if (transform.position == pos1.position)
+                {
+                    dir = true;
+                    sprite.flipX = false;
+                }
             }
+
         }
-        
-
-
-
     }
     private void OnDrawGizmos()
     {

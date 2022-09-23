@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class Shoot : MonoBehaviour
 {
+    public GameManager manager;
     [SerializeField]
     private float wallForce;
     [SerializeField]
@@ -30,34 +32,38 @@ public class Shoot : MonoBehaviour
 
     public AudioSource source;
 
+    public CinemachineVirtualCamera cinemachineVirtualCamera;
+    public float intensity;
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 gunpos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (gunpos.x < transform.position.x)
+        if (manager.hasStarted)
         {
-            transform.eulerAngles = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
-        }
-        else
-        {
-            transform.eulerAngles = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
-        }
+            Vector3 gunpos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (gunpos.x < transform.position.x)
+            {
+                transform.eulerAngles = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+            }
+            else
+            {
+                transform.eulerAngles = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            }
 
-        if (Input.GetMouseButtonDown(0) && inWin && canShoot)
-        {
-           WinGame();
+            if (Input.GetMouseButtonDown(0) && inWin && canShoot)
+            {
+                WinGame();
+            }
+            else if (Input.GetMouseButtonDown(0) && inWall && canShoot)
+            {
+                StartCoroutine(WallFire(wallForce));
+            }
+            else if (Input.GetMouseButtonDown(0) && !inWall && canShoot)
+            {
+                StartCoroutine(WallFire(airForce));
+            }
         }
-        else if (Input.GetMouseButtonDown(0) && inWall && canShoot)
-        {
-            StartCoroutine(WallFire(wallForce));
-        }
-        else if (Input.GetMouseButtonDown(0) && !inWall && canShoot)
-        {
-            StartCoroutine(WallFire(airForce));
-        }
-
-
+           
     }
 
     IEnumerator WallFire(float forceAmount)
@@ -67,10 +73,13 @@ public class Shoot : MonoBehaviour
         player.anim.SetBool("shoot", true);
         frog.SetBool("shoot", true);
         canShoot = false;
+        CinemachineBasicMultiChannelPerlin perlin = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        perlin.m_AmplitudeGain = intensity;
         yield return new WaitForSeconds(.2f);
         GameObject explosion = Instantiate(bullet, origin.transform.position, origin.transform.rotation);
         rb.AddForce((Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized * -forceAmount, ForceMode2D.Impulse);
         Destroy(explosion, .5f);
+        perlin.m_AmplitudeGain = 0;
         yield return new WaitForSeconds(rateOfFire);
         canShoot = true;
         frog.SetBool("shoot", false);
