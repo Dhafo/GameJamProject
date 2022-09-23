@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEditor.ShaderGraph.Internal;
-using static System.Net.Mime.MediaTypeNames;
 using Image = UnityEngine.UI.Image;
 
 public class Fade : MonoBehaviour
@@ -26,7 +24,7 @@ public class Fade : MonoBehaviour
             for (float i = 1; i >= 0; i -= Time.deltaTime * fadeSpeed)
             {
                 img.color = new Color(img.color.r, img.color.g, img.color.b, i);
-                if (img.color.a <= 0.01)
+                if (img.color.a <= 0.05)
                 {
                     img.color = new Color(img.color.r, img.color.g, img.color.b, 0);
                 }
@@ -39,7 +37,7 @@ public class Fade : MonoBehaviour
             {
                 
                 img.color = new Color(img.color.r, img.color.g, img.color.b, i);
-                if (img.color.a <= 0.01)
+                if (img.color.a <= 0.05)
                 {
                     img.color = new Color(img.color.r, img.color.g, img.color.b, 0);
                 }
