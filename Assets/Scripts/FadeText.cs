@@ -23,6 +23,10 @@ public class FadeText : MonoBehaviour
             for (float i = 1; i >= 0; i -= Time.deltaTime * fadeSpeed)
             {
                 text.color = new Color(text.color.r, text.color.g, text.color.b, i);
+                if (text.color.a <= 0.01)
+                {
+                    text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
+                }
                 yield return null;
             }
         }
@@ -31,9 +35,15 @@ public class FadeText : MonoBehaviour
             for (float i = 0; i <= 1; i += Time.deltaTime * fadeSpeed)
             {
                 text.color = new Color(text.color.r, text.color.g, text.color.b, i);
+                if (text.color.a <= 0.01)
+                {
+                    text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
+                }
                 yield return null;
             }
         }
+
+        
     }
 }
 
