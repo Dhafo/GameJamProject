@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     public Fade fade;
+    public int scene;
 
     public void OnPlay() 
     {
@@ -14,8 +15,16 @@ public class Menu : MonoBehaviour
     IEnumerator OnPress() 
     {
         fade.RunFade(false);
-        yield return new WaitForSeconds(.76f);
+        if(Time.timeScale == 0) 
+        {
+            Time.timeScale = 1;
+            yield return new WaitForSeconds(.8f);
+        }
+        else 
+        {
+            yield return new WaitForSeconds(1.3f);
+        }
         PlayerPrefs.SetInt("showCutscene", 1);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(scene);
     }
 }

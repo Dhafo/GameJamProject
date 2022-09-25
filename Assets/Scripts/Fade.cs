@@ -10,7 +10,15 @@ public class Fade : MonoBehaviour
     public float fadeSpeed;
 
     public bool faded = false;
+    public bool atStart = false;
 
+    private void Start()
+    {
+        if (atStart) 
+        {
+            RunFade(true);
+        }
+    }
     public void RunFade(bool away) 
     {
         StartCoroutine(FadeImage(away));

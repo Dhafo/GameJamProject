@@ -5,6 +5,8 @@ using Cinemachine;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
+using static System.Net.Mime.MediaTypeNames;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,21 +28,28 @@ public class GameManager : MonoBehaviour
     public float fadeTime5;
     public FadeText text2;
 
-    public Canvas canvas;
-
 
   
 
     private void Start()
     {
-        if (PlayerPrefs.GetInt("showCutscene") == 1)
+        if(SceneManager.GetActiveScene().buildIndex == 0) 
+        {
+            StartGame();
+        }
+
+        else if (PlayerPrefs.GetInt("showCutscene") == 1)
         {
             StartCoroutine(StartCutscene());
             PlayerPrefs.SetInt("showCutscene", 0);
         }
         else 
         {
-            canvas.gameObject.SetActive(false);
+            CutSceneBackground.gameObject.SetActive(false);
+            CutSceneBackground2.gameObject.SetActive(false);
+            FadeIn.gameObject.SetActive(false);
+            text1.gameObject.SetActive(false);
+            text2.gameObject.SetActive(false);
             cam.gameObject.SetActive(false);
             //director.Play();
             //cam.Priority = 0;
