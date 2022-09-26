@@ -12,6 +12,11 @@ public class Player : MonoBehaviour
     public GameManager manager;
 
     public float speed;
+    public float slimeImpact;
+    public float maxUpwardSpeed;
+    public float maxFallingSpeed;
+
+    Vector2 lastVelocity;
 
     public Animator anim;
 
@@ -20,10 +25,21 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(rb.velocity.y < 0f)
+        var curSpeed = lastVelocity.magnitude;
+        if (rb.velocity.y < 0f)
         {
-            rb.velocity += Vector2.up   * -speed;
+            rb.velocity += Vector2.up * -speed;
         }
+
+        if (rb.velocity.y < -maxFallingSpeed && curSpeed > maxFallingSpeed)
+        {
+            rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxFallingSpeed);
+        }
+        if (rb.velocity.y > maxUpwardSpeed && curSpeed > maxUpwardSpeed)
+        {
+            rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxUpwardSpeed);
+        }
+        lastVelocity = rb.velocity;
 
     }
 
@@ -42,5 +58,15 @@ public class Player : MonoBehaviour
         perlin.m_AmplitudeGain = 0.45f;
         yield return new WaitForSeconds(.075f);
         perlin.m_AmplitudeGain = 0f;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Slime")
+        {
+            var curSpeed = lastVelocity.magnitude;
+            var direction = lastVelocity.normalized;
+            rb.velocity = direction * Mathf.Max(curSpeed / slimeImpact, 0f);
+        }
     }
 }
